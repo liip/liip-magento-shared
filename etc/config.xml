@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<config>
+    <modules>
+        <Liip_Shared>
+            <version>0.1.0</version>
+        </Liip_Shared>
+    </modules>
+
+    <global>
+        <models>
+            <liip>
+                <class>Liip_Shared_Model</class>
+                <resourceModel>jungfrau_resource</resourceModel>
+            </liip>
+            <jungfrau_resource>
+                <class>Jungfrau_Shared_Model_Resource</class>
+            </jungfrau_resource>
+        </models>
+
+        <resources>
+            <liip_setup>
+                <setup>
+                    <module>Liip_Shared</module>
+                    <class>Liip_Shared_Model_Resource_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </liip_setup>
+        </resources>
+
+        <helpers>
+            <liip>
+                <class>Liip_Shared_Helper</class>
+            </liip>
+        </helpers>
+    </global>
+
+</config>
+

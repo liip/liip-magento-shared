@@ -1,0 +1,231 @@
+<?php
+
+class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
+{
+    /**
+     * Get all options for an attribute.
+     *
+     * @param   string  $code   Attribute code
+     * @param   string  $index  Column to index array with (reference, sort_order)
+     * @return  array   [index => ['option_id' => id, 'label' => str, 'reference' => ref], .. ]
+     */
+    public function getOptions($code, $index = 'reference')
+    {
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $connection = $resource->getReadConnection();
+
+        $select = $connection->select()->from(array('o' => $resource->getTable('attribute_option')), array('option_id', 'sort_order', 'reference'));
+        $select->joinLeft(array('v' => $resource->getTable('attribute_option_value')), 'v.option_id = o.option_id', array('label' => 'value'));
+        $select->where('o.attribute_id = ?', $attribute->getIdByCode('catalog_product', $code));
+        $select->where('v.store_id = ?', Mage_Core_Model_App::ADMIN_STORE_ID);
+
+        $options = array();
+        foreach ($connection->fetchAll($select) as $row) {
+            $options[$row[$index]] = new Varien_Object($row);
+        }
+
+        return $options;
+    }
+
+    /**
+     * Get an option id by attribute code and reference.
+     *
+     * @param   string  $code       Attribute code
+     * @param   string  $reference
+     * @return  int|null    Option id or null if not found
+     */
+    public function getOptionId($code, $reference)
+    {
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $id = $attribute->getIdByCode('catalog_product', $code);
+
+        $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+        $select = $connection->select()->from($resource->getTable('attribute_option'), array('option_id'))->where('attribute_id = ?', $id)->where('reference = ?', $reference);
+        return $connection->fetchOne($select);
+    }
+
+    /**
+     * Get an option by attribute code and reference.
+     *
+     * @param   string  $code       Attribute code
+     * @param   string  $reference
+     * @return  array   Option row with admin label
+     */
+    public function getOption($code, $reference)
+    {
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $id = $attribute->getIdByCode('catalog_product', $code);
+
+        $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+        $select = $connection->select()->from(array('o' => $resource->getTable('attribute_option')));
+        $select->joinLeft(array('v' => $resource->getTable('attribute_option_value')), 'v.option_id = o.option_id', array('label' => 'value'));
+        $select->where('o.attribute_id = ?', $id);
+        $select->where('o.reference = ?', $reference);
+        $select->where('v.store_id = ?', Mage_Core_Model_App::ADMIN_STORE_ID);
+        return $connection->fetchRow($select);
+    }
+
+    /**
+     * Get the reference of an attribute option by its id.
+     *
+     * @param   string  $code       Attribute code
+     * @param   int     $int        Option id
+     * @return  string|null     Reference or null if not found
+     */
+    public function getOptionReference($code, $id)
+    {
+        // attribute model, its resource model and id
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $connection = $resource->getReadConnection();
+
+        $select = $connection->select();
+        $select->from($resource->getTable('attribute_option'), array('reference'));
+        $select->where('attribute_id = ?', $attribute->getIdByCode('catalog_product', $code));
+        $select->where('option_id = ?', $id);
+
+        return $connection->fetchOne($select);
+    }
+
+    /**
+     * Retrieves the human readable name of an option
+     *
+     * @param   string  $code   Attribute code
+     * @param   int     $id     Option id
+     * @param   string|null     Name or null it not found
+     */
+    public function getOptionName($code, $id, $store = Mage_Core_Model_App::ADMIN_STORE_ID)
+    {
+        // attribute model, its resource model and id
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $attributeId = $attribute->getIdByCode('catalog_product', $code);
+
+        // write connection
+        $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+        $select = $connection->select()
+        ->from(array('o' => $resource->getTable('attribute_option')), array())
+        ->where('o.attribute_id = ?', $attributeId)
+        ->where('o.option_id = ?', $id);
+
+        $select->joinLeft(array('v' => $resource->getTable('attribute_option_value')), 'o.option_id = v.option_id', array('value'))
+        ->where('v.store_id = ?', $store);
+
+        return $connection->fetchOne($select);
+    }
+
+    /**
+     * Retrieves the reference by name
+     * @param   string  $code   Attribute code
+     * @param   string  $name   Option name
+     * @return  string|null     Reference or null it not found
+     */
+    public function getOptionReferenceByName($code, $name)
+    {
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $id = $attribute->getIdByCode('catalog_product', $code);
+
+        $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+        $select = $connection->select();
+        $select->from(array('o' => $resource->getTable('attribute_option')), array('option_id'));
+        $select->where('o.attribute_id = ?', $id);
+        $select->joinLeft(array('ov' => $resource->getTable('attribute_option_value')), 'o.option_id = ov.option_id', array());
+        $select->where('ov.value = ?', $name);
+        $select->limit(1);
+
+        return $connection->fetchOne($select);
+    }
+
+    /**
+     * Creates or updates an attribute option by reference
+     *
+     * If the reference does not yet exist we insert and otherwise update the option
+     *
+     * @param   string  $code       Attribute code
+     * @param   string  $reference  Reference to store
+     * @param   string|array $name  Name to store or array of names for multi-store sites, e.g., [store_id => 'Switzerland', store_id => 'Schweiz'] (first one will be set as admin)
+     * @param int $sort
+     * @param bool $override Whether to update the label if it already exists
+     * @return int The id of the option
+     */
+    public function addOption($code, $reference, $name, $sort = 0, $override = true)
+    {
+        // attribute model, its resource model and id
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $id = $attribute->getIdByCode('catalog_product', $code);
+
+        // write connection
+        $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+        $select = $connection->select()->from($resource->getTable('attribute_option'), array('option_id'))->where('attribute_id = ?', $id)->where('reference = ?', $reference);
+
+        if ($option = $connection->fetchOne($select)) {
+            // UPDATE
+
+            if ($override) {
+                if (is_array($name)) {
+                    // admin
+                    $connection->update($resource->getTable('attribute_option_value'), array('value' => reset($name)), array($connection->quoteInto('store_id = ?', 0), $connection->quoteInto('option_id = ?', $option)));
+
+                    // other stores
+                    $i = 1;
+                    foreach ($name as $storeId=>$value) {
+                        $storeId = is_string($storeId) ? $i : $storeId;
+                        $connection->update($resource->getTable('attribute_option_value'), array('value' => $value), array($connection->quoteInto('store_id = ?', $storeId), $connection->quoteInto('option_id = ?', $option))); // EN
+                        ++$i;
+                    }
+                } else {
+                    $connection->update($resource->getTable('attribute_option_value'), array('value' => $name), $connection->quoteInto('option_id = ?', $option));
+                }
+
+                // update sort
+                $connection->update($resource->getTable('attribute_option'), array('sort_order' => $sort), $connection->quoteInto('option_id = ?', $option));
+            }
+
+        } else {
+            // INSERT
+            $data = array(
+               'attribute_id' => $id,
+               'sort_order' => $sort,
+               'reference' => $reference
+            );
+            $connection->insert($resource->getTable('attribute_option'), $data);
+
+            // get option id
+            $option = $connection->lastInsertId();
+
+            if (is_array($name)) {
+
+                // admin
+                $data = array(
+                    'option_id' => $option,
+                    'store_id' => Mage_Core_Model_App::ADMIN_STORE_ID,
+                    'value' => reset($name),
+                );
+                $connection->insert($resource->getTable('attribute_option_value'), $data);
+
+                // other stores
+                $i = 1;
+                foreach ($name as $storeId=>$value) {
+                    $data['store_id'] = is_string($storeId) ? $i : $storeId;
+                    $data['value'] = $value;
+                    $connection->insert($resource->getTable('attribute_option_value'), $data);
+                    ++$i;
+                }
+            } else {
+
+                $data = array(
+                    'option_id' => $option,
+                    'store_id' => Mage_Core_Model_App::ADMIN_STORE_ID,
+                    'value' => $name
+                );
+                $connection->insert($resource->getTable('attribute_option_value'), $data);
+            }
+        }
+        return $option;
+    }
+}
