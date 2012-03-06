@@ -24,4 +24,36 @@ Deploy files outside the module directory
 
 Usage
 =====
-RTFC
+
+The module renames its Magento namespace as `liip`. Therefore, you access models and helpers
+as `Mage::getModel('liip/connection_curl')` or `Mage::helper('liip')`.
+
+Use the Setup class in your module
+----------------------------------
+
+In your module's `config.xml`, specify the new setup class
+
+    <global>
+        <resources>
+            <mymodule_setup>
+                <setup>
+                    <module>Liip_Shared</module>
+                    <class>Liip_Shared_Model_Resource_Setup</class>
+                </setup>
+            </mymodule_setup>
+        </resources>
+    </global>
+
+
+
+Attribute
+---------
+
+See `Helper/Attribute.php`
+
+
+
+Connection
+----------
+
+See `Model/Connection*`
