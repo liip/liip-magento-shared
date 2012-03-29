@@ -8,6 +8,7 @@ Features
 * Connection class to download files
 * Adds a `reference` field to attribute options for improved linking of imported values
 * Many methods to handle attributes and their options
+* Full page caching container classes for: disabling caching / cookie-based caching
 
 Installation
 ============
