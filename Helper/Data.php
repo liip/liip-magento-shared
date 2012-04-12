@@ -36,4 +36,29 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
     {
         return strtr($text, array('*' => '%', '?' => '_'));
     }
+
+    /**
+     * Formats a date according to the respective locale
+     *
+     * Acts the same as `Mage::helper('core')->formatDate()` except that we detect
+     * the unsupported format "dd.mm.yy" and fix it accordingly.
+     *
+     * @param   string  The date to format
+     * @param   string  The format type (full, short, long, medium)
+     * @return  string  The formatted date
+     */
+    public function formatDate($date, $formatType = Mage_Core_Model_Locale::FORMAT_TYPE_SHORT)
+    {
+        if (!$date) {
+            return $date;
+        }
+
+        // when the year only is two digits, strtotime() fails.
+        // strtotime('31.3.12') -> returns today's date
+        if (preg_match('/^(\d{1,2}\.\d{1,2})\.(\d{2})$/', $date, $matches)) {
+            $date = $matches[1].'.20'.$matches[2];
+        }
+
+        return Mage::helper('core')->formatDate($date);
+    }
 }
