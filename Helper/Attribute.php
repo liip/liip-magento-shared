@@ -7,9 +7,10 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
      *
      * @param   string  $code   Attribute code
      * @param   string  $index  Column to index array with (reference, sort_order)
+     * @param   string  $entityType  Entity type
      * @return  array   [index => ['option_id' => id, 'label' => str, 'reference' => ref], .. ]
      */
-    public function getOptions($code, $index = 'reference')
+    public function getOptions($code, $index = 'reference', $entityType = 'catalog_product')
     {
         $attribute = Mage::getModel('eav/entity_attribute');
         $resource = $attribute->getResource();
@@ -17,7 +18,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
 
         $select = $connection->select()->from(array('o' => $resource->getTable('attribute_option')), array('option_id', 'sort_order', 'reference'));
         $select->joinLeft(array('v' => $resource->getTable('attribute_option_value')), 'v.option_id = o.option_id', array('label' => 'value'));
-        $select->where('o.attribute_id = ?', $attribute->getIdByCode('catalog_product', $code));
+        $select->where('o.attribute_id = ?', $attribute->getIdByCode($entityType, $code));
         $select->where('v.store_id = ?', Mage_Core_Model_App::ADMIN_STORE_ID);
 
         $options = array();
