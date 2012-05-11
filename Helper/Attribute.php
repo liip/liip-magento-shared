@@ -10,7 +10,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
      * @param   string  $entityType  Entity type
      * @return  array   [index => ['option_id' => id, 'label' => str, 'reference' => ref], .. ]
      */
-    public function getOptions($code, $index = 'reference', $entityType = 'catalog_product')
+    public function getOptions($code, $index = 'reference', $entityType = Mage_Catalog_Model_Product::ENTITY)
     {
         $attribute = Mage::getModel('eav/entity_attribute');
         $resource = $attribute->getResource();
