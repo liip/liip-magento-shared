@@ -10,11 +10,7 @@
         <models>
             <liip>
                 <class>Liip_Shared_Model</class>
-                <resourceModel>jungfrau_resource</resourceModel>
             </liip>
-            <jungfrau_resource>
-                <class>Jungfrau_Shared_Model_Resource</class>
-            </jungfrau_resource>
         </models>
 
         <resources>
