@@ -61,4 +61,34 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
 
         return Mage::helper('core')->formatDate($date, $formatType);
     }
+
+    /**
+     * Check if current date is withingProduct can be ordered.
+     *
+     * @param   string $from Datetime
+     * @param   string $to Datetime
+     * @param   string $date Current date or null for now
+     * @return true or false
+     */
+    public function isDateInRange($from = false, $to = false, $date = null)
+    {
+        if (!$from && !$to) {
+            return true;
+        }
+
+        if (!$date) {
+            $date = strtotime(date('Y-m-d'));
+        }
+
+        if ($from) {
+            $from = strtotime($from);
+        }
+        if ($to) {
+            $to = strtotime($to);
+        }
+
+        return ($from && !$to && $from <= $date) ||
+            (!$from && $to && $to >= $date) ||
+            ($from && $to && $from <= $date && $to >= $date);
+    }
 }
