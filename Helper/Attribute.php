@@ -98,12 +98,12 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
      * @param   int     $id     Option id
      * @param   string|null     Name or null it not found
      */
-    public function getOptionName($code, $id, $store = Mage_Core_Model_App::ADMIN_STORE_ID)
+    public function getOptionName($code, $id, $store = Mage_Core_Model_App::ADMIN_STORE_ID, $entityType = Mage_Catalog_Model_Product::ENTITY)
     {
         // attribute model, its resource model and id
         $attribute = Mage::getModel('eav/entity_attribute');
         $resource = $attribute->getResource();
-        $attributeId = $attribute->getIdByCode('catalog_product', $code);
+        $attributeId = $attribute->getIdByCode($entityType, $code);
 
         // write connection
         $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
