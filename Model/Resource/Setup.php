@@ -2,6 +2,37 @@
 
 class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
 {
+    /**
+     * Sets config value in db
+     * @param   string  $path
+     * @param   string  $value
+     */
+    public function setConfig($path, $value)
+    {
+        $this->insertUpdate(
+            $this->getTable('core_config_data'),
+            array(
+                'path' => $path,
+                'value' => $value,
+            ),
+            $this->_conn->quoteInto('path = ?', $path)
+        );
+
+    }
+
+    /**
+     * Inserts but updates on duplicate
+     */
+    public function insertUpdate($table, array $bind, $where)
+    {
+        try {
+            $this->_conn->insert($table, $bind);
+        } catch (Zend_Db_Statement_Exception $e) {
+            if ($e->getCode() == 23000) { // Integrity constraint violation
+                $this->_conn->update($table, $bind, $where);
+            }
+        }
+    }
 
     /**
      * Adds support to add the an attribute to a set through the `attribute_set` property
