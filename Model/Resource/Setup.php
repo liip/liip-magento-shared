@@ -9,7 +9,7 @@ class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
      */
     public function setConfig($path, $value)
     {
-        $this->insertUpdate(
+        $this->insertOnDuplicateKeyUpdate(
             $this->getTable('core_config_data'),
             array(
                 'path' => $path,
@@ -23,14 +23,13 @@ class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
     /**
      * Inserts but updates on duplicate
      */
-    public function insertUpdate($table, array $bind, $where)
+    public function insertOnDuplicateKeyUpdate($table, array $bind, $where)
     {
-        try {
+        $select = $this->_conn->select()->from($table)->where($where);
+        if (count($this->_conn->fetchAll($select))) {
+            $this->_conn->update($table, $bind, $where);
+        } else {
             $this->_conn->insert($table, $bind);
-        } catch (Zend_Db_Statement_Exception $e) {
-            if ($e->getCode() == 23000) { // Integrity constraint violation
-                $this->_conn->update($table, $bind, $where);
-            }
         }
     }
 
