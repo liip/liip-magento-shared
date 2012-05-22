@@ -4,32 +4,28 @@ class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
 {
     /**
      * Sets config value in db
+     *
      * @param   string  $path
      * @param   string  $value
+     * @param   string  $scope  E.g., Mage_Adminhtml_Block_System_Config_Form::SCOPE_STORES
+     * @param   int     $scopeId
      */
-    public function setConfig($path, $value)
+    public function setConfig($path, $value, $scope = Mage_Adminhtml_Block_System_Config_Form::SCOPE_DEFAULT,
+        $scopeId = Mage_Core_Model_App::ADMIN_STORE_ID)
     {
-        $this->insertOnDuplicateKeyUpdate(
-            $this->getTable('core_config_data'),
-            array(
-                'path' => $path,
-                'value' => $value,
-            ),
-            $this->_conn->quoteInto('path = ?', $path)
-        );
+        $table = $this->getTable('core_config_data');
 
-    }
-
-    /**
-     * Inserts but updates on duplicate
-     */
-    public function insertOnDuplicateKeyUpdate($table, array $bind, $where)
-    {
-        $select = $this->_conn->select()->from($table)->where($where);
-        if (count($this->_conn->fetchAll($select))) {
-            $this->_conn->update($table, $bind, $where);
+        // fk unique constraint on scope/scope_id/path
+        $exists = $this->_conn->select()->from($table)
+            ->where('scope = ?', $scope)
+            ->where('scope_id = ?', $scopeId)
+            ->where('path = ?', $path);
+        $exists = $this->_conn->fetchAll($exists);
+        if (count($exists)) {
+            $exists = reset($exists);
+            $this->_conn->update($table, array('value' => $value), $this->_conn->quoteInto('config_id = ?', $exists['config_id']));
         } else {
-            $this->_conn->insert($table, $bind);
+            $this->_conn->insert($table, array('scope' => $scope, 'scope_id' => $scopeId, 'path' => $path, 'value' => $value));
         }
     }
 
