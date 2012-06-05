@@ -3,8 +3,41 @@
 class Liip_Shared_Helper_Product extends Mage_Core_Helper_Abstract
 {
     /**
+     * @return  int     The status of the product (in the admin store)
+     */
+    public function getStatus($productId)
+    {
+        $statuses = Mage::getSingleton('catalog/product_status')->getProductStatus($productId, Mage_Core_Model_App::ADMIN_STORE_ID);
+        return reset($statuses);
+    }
+
+    /**
+     * @param   array|int     $productIds
+     * @param   int           $status         Mage_Catalog_Model_Product_Status::STATUS_*
+     */
+    public function updateStatus($productIds, $status)
+    {
+        $this->updateAttribute($productIds, 'status', $status);
+    }
+
+    /**
+     * Updates an attribute of a product in admin store without touching any view settings
+     * and no event dispatching
+     *
+     * In particular, it does not uncheck the 'Use Default Value' checkboxes and it does not
+     * care which store is currently active
+     * @param   array|int   $productIds     The ids of products to update, either an array or a single id
+     * @param   string      $attribute      The attribute to change
+     * @param   mixed       $value          The value to set the attribute to
+     */
+    public function updateAttribute($productIds, $attribute, $value)
+    {
+        Mage::getSingleton('catalog/product_action')->updateAttributes((array)$productIds, array($attribute => $value), Mage_Core_Model_App::ADMIN_STORE_ID);
+    }
+
+    /**
      * Load a product by SKU.
-     * 
+     *
      * @param string $sku SKU
      * @return Mage_Catalog_Model_Product the product model
      */
