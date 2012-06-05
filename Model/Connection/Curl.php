@@ -17,10 +17,10 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
     }
 
     /**
-     * @param string|array  $request        The url encoded string containing the params or an array with key=>value association
+     * @param string|array  $query        The url encoded string containing the params or an array with key=>value association
      * @param string        $contentType    The content type to set or FALSE for none, i.e., let cURL decide:
-     *                                      if $request is a string = application/x-www-form-urlencoded
-     *                                      if $request is an array = multipart/form-data
+     *                                      if $query is a string = application/x-www-form-urlencoded
+     *                                      if $query is an array = multipart/form-data
      */
     public function post($query, $contentType = 'text/xml; charset=UTF-8')
     {
@@ -29,7 +29,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         curl_setopt($curl, CURLOPT_URL, $this->url);
 
         curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $query);
         if ($contentType) {
             curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: $contentType"));
         }
@@ -77,10 +77,10 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
      * @param string $local Local file name or NULL to auto-generate (first tries Content-Disposition and then uses basename of the url)
      * @param string $remote Remote file name.
      * @param string $varDirName    In case of auto-generated local name, the subdirectory to put it in
-     * @param string $request    	The url encoded string containing the params or an array with key=>value association (can be null)
+     * @param string $query         The url encoded string containing the params or an array with key=>value association (can be null)
      * @param string $contentType   The content type to set or FALSE for none, i.e., let cURL decide:
-     *                              if $request is a string = application/x-www-form-urlencoded
-     *                              if $request is an array = multipart/form-data
+     *                              if $query is a string = application/x-www-form-urlencoded
+     *                              if $query is an array = multipart/form-data
      * @return string|FALSE  The file name where it was saved or FALSE on failure
      * @throw Exception On access failure of local file
      */
@@ -114,9 +114,9 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         curl_setopt($ch, CURLOPT_FILE, $fp);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this, 'header'));
-        if ($request != null) {
+        if ($query != null) {
             curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
         }
         if ($contentType) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: $contentType"));
