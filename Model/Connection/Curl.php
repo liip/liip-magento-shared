@@ -97,7 +97,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 
         if (null == $local) {
             if ($var = Mage::getConfig()->getVarDir($varDirName)) {
-                $download = tempnam($var, 'jungfrau_download');
+                $download = tempnam($var, 'liip_download');
             } else {
                 throw new Exception('Could not get var dir for file download. Verify dir is writable: var/'.$varDirName);
             }
