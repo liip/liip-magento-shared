@@ -5,7 +5,7 @@
  *
  * <source_model>liip/config_source_target</source_model>
  */
-class Jungfrau_Shared_Model_Config_Source_Target
+class Liip_Shared_Model_Config_Source_Target
 {
     const TEST = 'test';
     const PROD = 'prod';
