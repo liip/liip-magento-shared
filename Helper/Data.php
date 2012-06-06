@@ -76,7 +76,7 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
             return true;
         }
         if (!$date) {
-            $date = strtotime(date('Y-m-d H:i:s'));
+            $date = Mage::getModel('core/date')->timestamp(time());
         }
         if ($from) {
             $from = strtotime($from);
