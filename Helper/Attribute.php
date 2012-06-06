@@ -115,7 +115,46 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
         $select->joinLeft(array('v' => $resource->getTable('attribute_option_value')), 'o.option_id = v.option_id', array('value'))
         ->where('v.store_id = ?', $store);
 
-        return $connection->fetchOne($select);
+        $name = $connection->fetchOne($select);
+        if ($name === false && $store != Mage_Core_Model_App::ADMIN_STORE_ID) {
+            // must be inherited from admin
+            $name = $this->getOptionNameByReference($code, $id, Mage_Core_Model_App::ADMIN_STORE_ID, $entityType);
+        }
+
+        return $name;
+    }
+
+    /**
+     * Retrieves the human readable name of an option by reference
+     *
+     * @param   string  $code   Attribute code
+     * @param   int     $id     Option id
+     * @param   string|null     Name or null it not found
+     */
+    public function getOptionNameByReference($code, $reference, $store = Mage_Core_Model_App::ADMIN_STORE_ID, $entityType = Mage_Catalog_Model_Product::ENTITY)
+    {
+        // attribute model, its resource model and id
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $attributeId = $attribute->getIdByCode($entityType, $code);
+
+        // write connection
+        $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+        $select = $connection->select()
+        ->from(array('o' => $resource->getTable('attribute_option')), array())
+        ->where('o.attribute_id = ?', $attributeId)
+        ->where('o.reference = ?', $reference);
+
+        $select->joinLeft(array('v' => $resource->getTable('attribute_option_value')), 'o.option_id = v.option_id', array('value'))
+        ->where('v.store_id = ?', $store);
+
+        $name = $connection->fetchOne($select);
+        if ($name === false && $store != Mage_Core_Model_App::ADMIN_STORE_ID) {
+            // must be inherited from admin
+            $name = $this->getOptionNameByReference($code, $reference, Mage_Core_Model_App::ADMIN_STORE_ID, $entityType);
+        }
+
+        return $name;
     }
 
     /**
