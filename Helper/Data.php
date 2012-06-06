@@ -75,18 +75,15 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
         if (!$from && !$to) {
             return true;
         }
-
         if (!$date) {
-            $date = strtotime(date('Y-m-d'));
+            $date = strtotime(date('Y-m-d H:i:s'));
         }
-
         if ($from) {
             $from = strtotime($from);
         }
         if ($to) {
             $to = strtotime($to);
         }
-
         return ($from && !$to && $from <= $date) ||
             (!$from && $to && $to >= $date) ||
             ($from && $to && $from <= $date && $to >= $date);
