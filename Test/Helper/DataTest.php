@@ -85,6 +85,4 @@ class Liip_Shared_Test_Helper_DataTest extends PHPUnit_Framework_TestCase
         $fakeDate = strtotime('2012-06-06 09:30:01');
         $this->assertFalse($this->helper->isDateInRange($from, $to, $fakeDate));
     }
-
 }
-
