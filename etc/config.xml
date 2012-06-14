@@ -25,6 +25,12 @@
             </liip_setup>
         </resources>
 
+        <blocks>
+            <liip>
+                <class>Liip_Shared_Block</class>
+            </liip>
+        </blocks>
+
         <helpers>
             <liip>
                 <class>Liip_Shared_Helper</class>
