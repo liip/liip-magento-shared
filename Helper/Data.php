@@ -88,4 +88,11 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
             (!$from && $to && $to >= $date) ||
             ($from && $to && $from <= $date && $to >= $date);
     }
+
+    public function getNightsBetween($date1, $date2)
+    {
+        $date1 = ceil(strtotime($date1)/86400);
+        $date2 = ceil(strtotime($date2)/86400);
+        return abs($date1 - $date2);
+    }
 }
