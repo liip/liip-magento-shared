@@ -11,6 +11,11 @@
             <liip>
                 <class>Liip_Shared_Model</class>
             </liip>
+            <core>
+                <rewrite>
+                    <store>Liip_Shared_Model_Core_Store</store>
+                </rewrite>
+            </core>
         </models>
 
         <resources>
