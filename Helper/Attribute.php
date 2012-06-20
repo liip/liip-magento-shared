@@ -36,7 +36,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
      * @param   string  $reference
      * @return  int|null    Option id or null if not found
      */
-    public function getOptionId($code, $reference)
+    public function getOptionIdByReference($code, $reference)
     {
         $attribute = Mage::getModel('eav/entity_attribute');
         $resource = $attribute->getResource();
@@ -45,6 +45,14 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
         $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
         $select = $connection->select()->from($resource->getTable('attribute_option'), array('option_id'))->where('attribute_id = ?', $id)->where('reference = ?', $reference);
         return $connection->fetchOne($select);
+    }
+
+    /**
+     * @deprecated use self::getOptionIdByReference()
+     */
+    public function getOptionId($code, $reference)
+    {
+        return $this->getOptionIdByReference($code, $reference);
     }
 
     /**
