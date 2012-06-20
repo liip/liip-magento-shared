@@ -30,7 +30,8 @@ class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
     }
 
     /**
-     * Adds support to add the an attribute to a set through the `attribute_set` property
+     * Adds support to add the an attribute to a set through the `attribute_set` property.
+     *
      *
      * Example $attr:
      * array(
@@ -69,6 +70,7 @@ class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
      * @param array $attr
      * @return Mage_Eav_Model_Entity_Setup
      *
+     * @see _prepareValues() for available settings
      * @see http://www.magentocommerce.com/wiki/5_-_modules_and_development/0_-_module_development_in_magento/installing_custom_attributes_with_your_module
      */
     public function addAttribute($entityTypeId, $code, array $attr)

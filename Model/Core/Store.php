@@ -3,7 +3,7 @@
 class Liip_Shared_Model_Core_Store extends Mage_Core_Model_Store
 {
     /**
-     * Round price
+     * Round price to 0.05
      *
      * @param mixed $price
      * @return double
