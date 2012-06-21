@@ -74,8 +74,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
     }
 
     /**
-     * @param string $local Local file name or NULL to auto-generate (first tries Content-Disposition and then uses basename of the url)
-     * @param string $remote Remote file name.
+     * @param string $local         Local file name or NULL to auto-generate (first tries Content-Disposition and then uses basename of the url)
+     * @param string $remote        Remote file name (optional, will be appended to url)
      * @param string $varDirName    In case of auto-generated local name, the subdirectory to put it in
      * @param string $query         The url encoded string containing the params or an array with key=>value association (can be null)
      * @param string $contentType   The content type to set or FALSE for none, i.e., let cURL decide:
