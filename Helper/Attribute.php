@@ -287,4 +287,29 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
         }
         return $option;
     }
+
+    /**
+     * Creates or updates an attribute option by reference
+     *
+     * If the reference does not yet exist we insert and otherwise update the option
+     *
+     * @param   string  $code       Attribute code
+     * @param   string  $reference  Reference to store
+     * @param   string|array $name  Name to store or array of names for multi-store sites, e.g., [store_id => 'Switzerland', store_id => 'Schweiz'] (first one will be set as admin)
+     * @param int $sort
+     * @param bool $override Whether to update the label if it already exists
+     * @return int The id of the option
+     */
+    function delAllOptions($code)
+    {
+        $optionsDel = array();
+        $options = Mage::helper('liip/attribute')->getOptions($code);
+
+        foreach ($options as $key => $option) {
+            $optionsDel['delete'][$option->option_id] = true;
+            $optionsDel['value'][$option->option_id] = true;
+        }
+        $setup = new Mage_Eav_Model_Entity_Setup('core_setup');
+        $setup->addAttributeOption($optionsDel);
+    }
 }
