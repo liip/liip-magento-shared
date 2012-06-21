@@ -3,6 +3,17 @@
 class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
 {
     /**
+     * Retrieves the attribute set id by given name.
+     *
+     * @param   string  $attributeSetName
+     * @return  int     The attribute set id
+     */
+    public function getSetId($attributeSetName)
+    {
+        return Mage::getModel('eav/entity_attribute_set')->load($attributeSetName, 'attribute_set_name')->getAttributeSetId();
+    }
+
+    /**
      * Get all options for an attribute.
      *
      * @param   string  $code   Attribute code
