@@ -205,7 +205,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
      * If the reference does not yet exist we insert and otherwise update the option
      *
      * @param   string  $code       Attribute code
-     * @param   string  $reference  Reference to store
+     * @param   string  $reference  Reference to option row (optional, will then go for `name' instead)
      * @param   string|array $name  Name to store or array of names for multi-store sites, e.g., [store_id => 'Switzerland', store_id => 'Schweiz'] (first one will be set as admin)
      * @param int $sort
      * @param bool $override Whether to update the label if it already exists
@@ -220,7 +220,14 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
 
         // write connection
         $connection = Mage::getSingleton('core/resource')->getConnection('core_write');
-        $select = $connection->select()->from($resource->getTable('attribute_option'), array('option_id'))->where('attribute_id = ?', $id)->where('reference = ?', $reference);
+        if (strlen($reference)) {
+            $select = $connection->select()->from($resource->getTable('attribute_option'), array('option_id'))->where('attribute_id = ?', $id)->where('reference = ?', $reference);
+        } else {
+            $select = $connection->select()
+                ->from(array('o' => $resource->getTable('attribute_option')), array('option_id'))
+                ->join(array('v' => $resource->getTable('attribute_option_value')), 'o.option_id = v.option_id', array())
+                    ->where('o.attribute_id = ?', $id)->where('v.value = ?', $name);
+        }
 
         if ($option = $connection->fetchOne($select)) {
             // UPDATE
@@ -250,7 +257,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
             $data = array(
                'attribute_id' => $id,
                'sort_order' => $sort,
-               'reference' => $reference
+               'reference' => (string)$reference
             );
             $connection->insert($resource->getTable('attribute_option'), $data);
 
