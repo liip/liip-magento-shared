@@ -95,4 +95,29 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
         $date2 = ceil(strtotime($date2)/86400);
         return abs($date1 - $date2);
     }
+
+    /**
+     * Uses the google maps geocoding API
+     *
+     * @return  [lat, lng, 'latitude' => lat, 'longitude' => lng]
+     * @see https://developers.google.com/maps/documentation/geocoding/
+     */
+    public function fetchGeolocation($place)
+    {
+        $url = 'http://maps.google.com/maps/geo?output=xml&q='.urlencode($place);
+        return $this->extractGeolocation(file_get_contents($url));
+    }
+
+    protected function extractGeolocation($xml)
+    {
+        $xml = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOERROR);
+        if ($xml === false || !isset($xml->Response->Placemark->Point->coordinates)) {
+            return false;
+        }
+
+        $cords = (string)$xml->Response->Placemark->Point->coordinates[0];
+        $coordinates = explode(',', $cords);
+        return array(0 => $coordinates[1], 1 => $coordinates[0], 'latitude' => $coordinates[1], 'longitude' => $coordinates[0]);
+    }
 }
+
