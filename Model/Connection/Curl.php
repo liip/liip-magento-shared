@@ -15,6 +15,34 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
     {
         return $this->filename;
     }
+    
+    /**
+     * GET request
+     * 
+     * @param string|array  $query        The url encoded string containing the params or an array with key=>value association
+     */
+    public function get($query = '')
+    {
+        if (is_array($query)) {
+            $query = http_build_query($query);
+        }
+        $url = $this->url . '?' . $query;
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+        
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        // never cache
+        curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
+        curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+    
+        // Execute, saving results in a variable
+        $result = curl_exec($curl);
+        curl_close($curl);
+    
+        return $result;
+    }
 
     /**
      * @param string|array  $query        The url encoded string containing the params or an array with key=>value association
