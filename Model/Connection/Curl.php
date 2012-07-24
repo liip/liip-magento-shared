@@ -6,6 +6,10 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 
     protected $filename = null;
 
+    protected $proxy;
+
+    protected $proxyUserPwd;
+
     public function __construct($url)
     {
         $this->url = $url;
@@ -15,7 +19,28 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
     {
         return $this->filename;
     }
-    
+
+    public function setProxy($proxy)
+    {
+        $this->proxy = $proxy;
+    }
+
+    public function setProxyUserPwd($proxyUserPwd)
+    {
+        $this->proxyUserPwd = $proxyUserPwd;
+    }
+
+    protected function proxify($curl)
+    {
+        if ($this->proxy) {
+            curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, 1);
+            curl_setopt($curl, CURLOPT_PROXY, $this->proxy);
+            if ($this->proxyUserPwd) {
+                curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->proxyUserPwd);
+            }
+        }
+    }
+
     /**
      * GET request
      * 
@@ -36,6 +61,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         // never cache
         curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
         curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+
+        $this->proxify($curl);
     
         // Execute, saving results in a variable
         $result = curl_exec($curl);
@@ -65,6 +92,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         // never cache
         curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
         curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+
+        $this->proxify($curl);
 
         // Execute, saving results in a variable
         $result = curl_exec($curl);
@@ -149,6 +178,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         if ($contentType) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: $contentType"));
         }
+
+        $this->proxify($curl);
 
         $result = curl_exec($ch);
 
