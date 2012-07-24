@@ -105,12 +105,17 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
     public function fetchGeolocation($place)
     {
         $url = 'http://maps.google.com/maps/geo?output=xml&q='.urlencode($place);
-        return $this->extractGeolocation(file_get_contents($url));
+        $xmlStr = Mage::getModel('liip/connection_curl', $url)->get();
+        return $this->extractGeolocation($xmlStr);
     }
 
-    protected function extractGeolocation($xml)
+    /**
+     * @param   string  $xmlStr
+     * @return  array
+     */
+    protected function extractGeolocation($xmlStr)
     {
-        $xml = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOERROR);
+        $xml = simplexml_load_string($xmlStr, 'SimpleXMLElement', LIBXML_NOERROR);
         if ($xml === false || !isset($xml->Response->Placemark->Point->coordinates)) {
             return false;
         }
