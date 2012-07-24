@@ -43,5 +43,35 @@
         </helpers>
     </global>
 
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <liip>
+                                            <title>Liip Configuration</title>
+                                        </liip>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+
+    <default>
+        <liip>
+            <connection>
+                <proxy></proxy>
+            </connection>
+        </liip>
+    </default>
+
 </config>
 

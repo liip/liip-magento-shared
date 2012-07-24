@@ -20,24 +20,11 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         return $this->filename;
     }
 
-    public function setProxy($proxy)
-    {
-        $this->proxy = $proxy;
-    }
-
-    public function setProxyUserPwd($proxyUserPwd)
-    {
-        $this->proxyUserPwd = $proxyUserPwd;
-    }
-
     protected function proxify($curl)
     {
-        if ($this->proxy) {
+        if ($proxy = Mage::getStoreConfig('liip/connection/proxy')) {
             curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, 1);
-            curl_setopt($curl, CURLOPT_PROXY, $this->proxy);
-            if ($this->proxyUserPwd) {
-                curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->proxyUserPwd);
-            }
+            curl_setopt($curl, CURLOPT_PROXY, $proxy);
         }
     }
 
