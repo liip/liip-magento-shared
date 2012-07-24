@@ -149,28 +149,28 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
             $download = $local;
         }
 
-        $ch = curl_init($url);
+        $curl = curl_init($url);
         $fp = fopen($download, 'w');
         if (!$fp) {
             throw new Exception('Cannot open file for writing: '.$download);
         }
 
-        curl_setopt($ch, CURLOPT_FILE, $fp);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this, 'header'));
+        curl_setopt($curl, CURLOPT_FILE, $fp);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_HEADERFUNCTION, array($this, 'header'));
         if ($query != null) {
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $query);
         }
         if ($contentType) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: $contentType"));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: $contentType"));
         }
 
         $this->proxify($curl);
 
-        $result = curl_exec($ch);
+        $result = curl_exec($curl);
 
-        curl_close($ch);
+        curl_close($curl);
         fclose($fp);
 
         if (null == $local) {
