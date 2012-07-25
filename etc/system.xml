@@ -1,9 +1,16 @@
 <?xml version="1.0"?>
 <config>
-    <sections>
+    <tabs>
         <liip translate="label" module="liip">
             <label>Liip</label>
-            <tab>service</tab>
+            <sort_order>100</sort_order>
+        </liip>
+    </tabs>
+    <sections>
+        <liip translate="label" module="liip">
+            <label>General</label>
+            <tab>liip</tab>
+            <sort_order>10</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>0</show_in_website>
             <show_in_store>0</show_in_store>
