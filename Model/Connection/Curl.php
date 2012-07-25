@@ -8,8 +8,6 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 
     protected $proxy;
 
-    protected $proxyUserPwd;
-
     public function __construct($url)
     {
         $this->url = $url;
@@ -25,6 +23,13 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         if ($proxy = Mage::getStoreConfig('liip/connection/proxy')) {
             curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, 1);
             curl_setopt($curl, CURLOPT_PROXY, $proxy);
+        }
+    }
+
+    protected function logError($curl)
+    {
+        if (curl_errno($curl) > 0) {
+            Mage::log('cURL Error ('.curl_errno($curl).') while fetching '.$this->url.': '.curl_error($curl), Zend_Log::ERR);
         }
     }
 
@@ -51,8 +56,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 
         $this->proxify($curl);
     
-        // Execute, saving results in a variable
         $result = curl_exec($curl);
+        $this->logError($curl);
         curl_close($curl);
     
         return $result;
@@ -82,8 +87,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 
         $this->proxify($curl);
 
-        // Execute, saving results in a variable
         $result = curl_exec($curl);
+        $this->logError($curl);
         curl_close($curl);
 
         return $result;
@@ -169,7 +174,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         $this->proxify($curl);
 
         $result = curl_exec($curl);
-
+        $this->logError($curl);
         curl_close($curl);
         fclose($fp);
 
