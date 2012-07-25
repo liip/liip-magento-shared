@@ -41,6 +41,7 @@
                 <class>Liip_Shared_Helper</class>
             </liip>
         </helpers>
+
     </global>
 
     <adminhtml>
@@ -63,7 +64,28 @@
                 </admin>
             </resources>
         </acl>
+        <translate>
+            <modules>
+                <Liip_Shared>
+                    <files>
+                        <default>Liip_Shared.csv</default>
+                    </files>
+                </Liip_Shared>
+            </modules>
+        </translate>
     </adminhtml>
+
+    <frontend>
+        <translate>
+            <modules>
+                <Liip_Shared>
+                    <files>
+                        <default>Liip_Shared.csv</default>
+                    </files>
+                </Liip_Shared>
+            </modules>
+        </translate>
+    </frontend>
 
     <default>
         <liip>
