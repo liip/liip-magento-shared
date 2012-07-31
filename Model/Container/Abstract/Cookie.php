@@ -19,7 +19,7 @@
             <block>core/template</block>
             <name>example</name>
             <placeholder>EXAMPLE_BLOCK</placeholder>
-            <container>Jungfrau_Module_Model_Container_Name</container>
+            <container>Liip_Module_Model_Container_Name</container>
             <cache_lifetime>86400</cache_lifetime>
         </example_block>
  *
@@ -29,7 +29,7 @@
  * 3. Extend Liip_Shared_Model_Container_Abstract_Cookie and implement _getName() returning the placeholder
  *    name from above (EXAMPLE_BLOCK)
 
-class Jungfrau_Module_Model_Container_Name extends Liip_Shared_Model_Container_Abstract_ Cookie
+class Liip_Module_Model_Container_Name extends Liip_Shared_Model_Container_Abstract_ Cookie
 {
     protected function _getName()
     {
