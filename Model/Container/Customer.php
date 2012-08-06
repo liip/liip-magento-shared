@@ -1,17 +1,19 @@
 <?php
 
-class Liip_Shared_Model_Container_Customer extends Enterprise_PageCache_Model_Container_Customer {
-
-    protected function _getIdentifier() {
+class Liip_Shared_Model_Container_Customer extends Enterprise_PageCache_Model_Container_Customer
+{
+    protected function _getIdentifier()
+    {
         return $this->_getCookieValue(Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER, '');
     }
 
-    protected function _getCacheId() {
+    protected function _getCacheId()
+    {
         return 'LIIP_CUSTOMER_' . md5($this->_placeholder->getAttribute('cache_id') . $this->_getIdentifier());
     }
 
-    protected function _renderBlock() {
-
+    protected function _renderBlock()
+    {
         $block = $this->_placeholder->getAttribute('block');
         $template = $this->_placeholder->getAttribute('template');
 
