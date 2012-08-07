@@ -4,8 +4,6 @@ require_once dirname(__FILE__) . '/../../../../../../../Mage.php';
 
 class Liip_Shared_Test_Model_Core_StoreTest extends PHPUnit_Framework_TestCase
 {
-    protected $helper;
-
     public function setUp()
     {
         parent::setUp();
@@ -26,5 +24,5 @@ class Liip_Shared_Test_Model_Core_StoreTest extends PHPUnit_Framework_TestCase
         $this->assertSame(4.0, Mage::getModel('core/store')->roundPrice(4.01));
         $this->assertSame(4.0, Mage::getModel('core/store')->roundPrice(4));
     }
-
 }
+
