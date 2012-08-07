@@ -13,6 +13,10 @@ class Liip_Shared_Model_Connection_Mock implements Liip_Shared_Model_Connection
         $this->response = $response;
     }
 
+    public function setUrl($url)
+    {
+    }
+
     public function post($request) {
 
         $this->last = $request;

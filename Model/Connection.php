@@ -2,6 +2,8 @@
 
 interface Liip_Shared_Model_Connection
 {
+    public function setUrl($url);
+
     /**
      * @param string
      */
