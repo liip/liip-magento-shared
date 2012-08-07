@@ -10,6 +10,11 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 
     public function __construct($url)
     {
+        $this->setUrl($url);
+    }
+
+    public function setUrl($url)
+    {
         $this->url = $url;
     }
 
