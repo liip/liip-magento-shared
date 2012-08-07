@@ -40,6 +40,7 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
      * @param   string          $url
      * @param   array[]string   $visibility     Flags: 'small_image', 'image', 'thumbnail'
      * @param   mixed           $extra          Metadata to be used for labelizing which cannot be found in the url
+     * @return  $this
      */
     public function addImage($url, array $visibility, $extra = false)
     {
@@ -55,6 +56,8 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
         if ($extra) {
             $this->images[$url]['extra'] = $extra;
         }
+
+        return $this;
     }
 
     /**
