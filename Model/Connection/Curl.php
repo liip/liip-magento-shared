@@ -3,14 +3,24 @@
 class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 {
     protected $url;
+    protected $useProxy = true;
 
     protected $filename = null;
 
     protected $proxy;
 
-    public function __construct($url)
+    public function __construct($args)
     {
-        $this->setUrl($url);
+        if (is_array($args)) {
+            if (isset($args['url'])) {
+                $this->setUrl($args['url']);
+            }
+            if (isset($args['use_proxy'])) {
+                $this->useProxy = $args['use_proxy'];
+            }
+        } else {
+            $this->setUrl($url);
+        }
     }
 
     public function setUrl($url)
@@ -25,7 +35,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 
     protected function proxify($curl)
     {
-        if ($proxy = Mage::getStoreConfig('liip/connection/proxy')) {
+        $proxy = Mage::getStoreConfig('liip/connection/proxy');
+        if ($proxy && $this->useProxy) {
             curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, 1);
             curl_setopt($curl, CURLOPT_PROXY, $proxy);
         }
