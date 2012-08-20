@@ -234,16 +234,12 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
 
             if ($override) {
                 if (is_array($name)) {
-                    // admin
-                    $connection->update($resource->getTable('attribute_option_value'), array('value' => reset($name)), array($connection->quoteInto('store_id = ?', 0), $connection->quoteInto('option_id = ?', $option)));
 
                     // other stores
-                    $i = 1;
-                    foreach ($name as $storeId=>$value) {
-                        $storeId = is_string($storeId) ? $i : $storeId;
-                        $connection->update($resource->getTable('attribute_option_value'), array('value' => $value), array($connection->quoteInto('store_id = ?', $storeId), $connection->quoteInto('option_id = ?', $option))); // EN
-                        ++$i;
+                    foreach ($name as $storeId => $value) {
+                        $connection->update($resource->getTable('attribute_option_value'), array('value' => $value), array($connection->quoteInto('store_id = ?', $storeId), $connection->quoteInto('option_id = ?', $option)));
                     }
+
                 } else {
                     $connection->update($resource->getTable('attribute_option_value'), array('value' => $name), $connection->quoteInto('option_id = ?', $option));
                 }
