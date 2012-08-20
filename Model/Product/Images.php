@@ -108,8 +108,11 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
     protected function getExistingImages()
     {
         $existing = array();
-        foreach ($this->product->getMediaGalleryImages() as $image) {
-            $existing[$image->getLabelDefault()] = $image;
+        $images = $this->product->getMediaGalleryImages();
+        if (is_array($images)) {
+            foreach ($images as $image) {
+                $existing[$image->getLabelDefault()] = $image;
+            }
         }
         return $existing;
     }
