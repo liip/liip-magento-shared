@@ -273,7 +273,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
                 // other stores
                 $i = 1;
                 foreach ($name as $storeId=>$value) {
-                    $data['store_id'] = is_string($storeId) ? $i : $storeId;
+                    $data['store_id'] = $storeId;
                     $data['value'] = $value;
                     $connection->insert($resource->getTable('attribute_option_value'), $data);
                     ++$i;
