@@ -262,22 +262,13 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
 
             if (is_array($name)) {
 
-                // admin
-                $data = array(
-                    'option_id' => $option,
-                    'store_id' => Mage_Core_Model_App::ADMIN_STORE_ID,
-                    'value' => reset($name),
-                );
-                $connection->insert($resource->getTable('attribute_option_value'), $data);
-
                 // other stores
-                $i = 1;
-                foreach ($name as $storeId=>$value) {
+                foreach ($name as $storeId => $value) {
                     $data['store_id'] = $storeId;
                     $data['value'] = $value;
                     $connection->insert($resource->getTable('attribute_option_value'), $data);
-                    ++$i;
                 }
+
             } else {
 
                 $data = array(
