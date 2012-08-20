@@ -19,7 +19,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
                 $this->useProxy = $args['use_proxy'];
             }
         } else {
-            $this->setUrl($url);
+            $this->setUrl($args);
         }
     }
 
