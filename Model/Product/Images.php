@@ -4,7 +4,7 @@
  * General product image downloader and attacher, respecting already existing images.
  *
  * Only adds images to products if they do not yet exist. Existance is determined by
- * {@link labelize()} whose result is stored as label for the image.
+ * md5'ing the url.
  *
  * @method  setDownloader(Liip_Shared_Model_Connection $connection)
  * @method  Liip_Shared_Model_Connection getDownloader()

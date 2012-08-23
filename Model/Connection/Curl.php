@@ -170,12 +170,12 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
             $download = $local;
         }
 
-        $curl = curl_init($url);
         $fp = fopen($download, 'w');
         if (!$fp) {
             throw new Exception('Cannot open file for writing: '.$download);
         }
 
+        $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_FILE, $fp);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         curl_setopt($curl, CURLOPT_HEADERFUNCTION, array($this, 'header'));
