@@ -146,10 +146,11 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
      * @param string $contentType   The content type to set or FALSE for none, i.e., let cURL decide:
      *                              if $query is a string = application/x-www-form-urlencoded
      *                              if $query is an array = multipart/form-data
+     * @param int    $permission    Explicitly set permission, must be in octal
      * @return string|FALSE  The file name where it was saved or FALSE on failure
      * @throw Exception On access failure of local file
      */
-    public function download($local = null, $remote = null, $varDirName = 'tmp', $query = null, $contentType = false)
+    public function download($local = null, $remote = null, $varDirName = 'tmp', $query = null, $contentType = false, $permission = 0660)
     {
         $url = $this->url;
 
@@ -201,6 +202,10 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
                 $local = $var . DS . basename($url);
             }
             rename($download, $local);
+        }
+
+        if ($permission && $result && file_exists($local)) {
+          chmod($local, $permission);
         }
 
         return $result === false ? false : $local;
