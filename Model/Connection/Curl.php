@@ -70,6 +70,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
         curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
 
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $this->proxify($curl);
     
         $result = curl_exec($curl);
@@ -101,6 +102,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
         curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
 
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $this->proxify($curl);
 
         $result = curl_exec($curl);
@@ -188,6 +190,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
             curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: $contentType"));
         }
 
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $this->proxify($curl);
 
         $result = curl_exec($curl);
