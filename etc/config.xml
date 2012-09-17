@@ -42,6 +42,16 @@
             </liip>
         </helpers>
 
+        <events>
+            <catelogsearch_searchable_attributes_load_after>
+                <observers>
+                    <enterprise_search>
+                        <class>enterprise_search/observer</class>
+                        <method>storeSearchableAttributes</method>
+                    </enterprise_search>
+                </observers>
+            </catelogsearch_searchable_attributes_load_after>
+        </events>
     </global>
 
     <adminhtml>
@@ -73,6 +83,18 @@
                 </Liip_Shared>
             </modules>
         </translate>
+
+        <events>
+            <!-- This was moved to global otherwise reindexing
+                 from cli will not index custom attributes -->
+            <catelogsearch_searchable_attributes_load_after>
+                <observers>
+                    <enterprise_search>
+                        <type>disabled</type>
+                    </enterprise_search>
+                </observers>
+            </catelogsearch_searchable_attributes_load_after>
+        </events>
     </adminhtml>
 
     <frontend>
