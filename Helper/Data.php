@@ -124,5 +124,14 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
         $coordinates = explode(',', $cords);
         return array(0 => $coordinates[1], 1 => $coordinates[0], 'latitude' => $coordinates[1], 'longitude' => $coordinates[0]);
     }
+
+    public function formatNumber($value, $precision = null)
+    {
+        $options = array('locale' => Mage::app()->getLocale()->getLocaleCode());
+        if ($precision) {
+            $options['precision'] = $precision;
+        }
+        return Zend_Locale_Format::toNumber($value, $options);
+    }
 }
 
