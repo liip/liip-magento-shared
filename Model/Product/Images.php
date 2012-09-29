@@ -109,7 +109,7 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
     {
         $existing = array();
         $images = $this->product->getMediaGalleryImages();
-        if (is_array($images)) {
+        if (is_array($images) || $images instanceof Traversable) {
             foreach ($images as $image) {
                 $existing[$image->getLabelDefault()] = $image;
             }
