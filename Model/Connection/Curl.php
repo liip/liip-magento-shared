@@ -4,6 +4,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 {
     protected $url;
     protected $useProxy = true;
+    protected $sslCertificate = null;
+    protected $sslVerifypeer = false;
 
     protected $filename = null;
 
@@ -18,6 +20,14 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
             if (isset($args['use_proxy'])) {
                 $this->useProxy = $args['use_proxy'];
             }
+            if (isset($args['ssl_verifypeer'])) {
+                $this->sslVerifypeer = $args['ssl_verifypeer'];
+            }
+            if (isset($args['ssl_certificate'])) {
+                $this->sslCertificate = $args['ssl_certificate'];
+                $this->sslVerifypeer = true;
+            }
+
         } else {
             $this->setUrl($args);
         }
@@ -39,6 +49,18 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         if ($proxy && $this->useProxy) {
             curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, 1);
             curl_setopt($curl, CURLOPT_PROXY, $proxy);
+        }
+    }
+
+    protected function sslify($curl)
+    {
+        if (!$this->sslVerifypeer) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        if ($this->sslCertificate) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($curl, CURLOPT_CAINFO, $this->sslCertificate);
         }
     }
 
@@ -70,7 +92,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
         curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
 
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+        $this->sslify($curl);
         $this->proxify($curl);
     
         $result = curl_exec($curl);
@@ -102,7 +125,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
         curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
 
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $this->sslify($curl);
         $this->proxify($curl);
 
         $result = curl_exec($curl);
@@ -190,7 +213,7 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
             curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: $contentType"));
         }
 
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $this->sslify($curl);
         $this->proxify($curl);
 
         $result = curl_exec($curl);
