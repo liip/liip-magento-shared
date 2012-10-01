@@ -2,6 +2,32 @@
 
 class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
 {
+    public function setProductCustomOption($productId, $title, array $optionData, array $values = array())
+    {
+        Mage::app()->getStore()->setId(Mage_Core_Model_App::ADMIN_STORE_ID);
+        if (!$product = Mage::getModel('catalog/product')->load($productId)) {
+            return false;
+        }
+
+        $defaultData = array(
+            'type'          => 'field',
+            'is_require'    => 0,
+            'price'         => 0,
+            'price_type' => 'fixed',
+        );
+
+        $data = array_merge($defaultData, $optionData, array(
+            'product_id'    => (int)$productId,
+            'title'         => $title,
+            'values'        => $values,
+        ));
+
+        $product->setHasOptions(1)->save();
+        $option = Mage::getModel('catalog/product_option')->setData($data)->setProduct($product)->save();
+
+        return $option;
+    }
+
     /**
      * Sets config value in db
      *
