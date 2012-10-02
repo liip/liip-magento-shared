@@ -2,11 +2,21 @@
 
 class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
 {
-    public function setProductCustomOption($productId, $title, array $optionData, array $values = array())
+    public function addCustomOption($product, $title, array $optionData, array $values = array())
     {
         Mage::app()->getStore()->setId(Mage_Core_Model_App::ADMIN_STORE_ID);
-        if (!$product = Mage::getModel('catalog/product')->load($productId)) {
-            return false;
+        if (!($product instanceof Mage_Catalog_Model_Product)) {
+            if (!$product = Mage::getModel('catalog/product')->load($product)) {
+                return false;
+            }
+        }
+
+        $defaultValue = array(
+            'price'         => 0,
+            'price_type'    => 'fixed',
+        );
+        foreach ($values as $idx=>$value) {
+            $values[$idx] = array_merge($defaultValue, $value);
         }
 
         $defaultData = array(
@@ -17,7 +27,7 @@ class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
         );
 
         $data = array_merge($defaultData, $optionData, array(
-            'product_id'    => (int)$productId,
+            'product_id'    => (int)$product->getId(),
             'title'         => $title,
             'values'        => $values,
         ));
