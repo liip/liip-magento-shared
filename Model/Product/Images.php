@@ -100,7 +100,6 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
             // delete all images that we haven't seen and have a label
             foreach ($existing as $label=>$img) {
                 if ($img !== true && strlen($label)) { // we didn't see this one
-                    var_dump('remove', $label, $img);
                     $this->getMediaGalleryAttributeBackend()->removeImage($this->product, $img->getFile());
                 }
             }
