@@ -118,6 +118,7 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
             );
         } catch (Exception $e) {
             Mage::log('Error adding image ('.$filename.') to product ('.$this->product->getId().'): '.$e->getMessage(), Zend_Log::WARN);
+            return;
         }
 
         $this->getMediaGalleryAttributeBackend()->updateImage($this->product, $movedname, array('label' => $label));
