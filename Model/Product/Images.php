@@ -8,9 +8,16 @@
  *
  * @method  setDownloader(Liip_Shared_Model_Connection $connection)
  * @method  Liip_Shared_Model_Connection getDownloader()
+ * @method  setDeleteUnknownImages(bool)
+ * @method  bool getDeleteUnknownImages()
+ * @method  setLabelize(int)
+ * @method  int getLabelize()
  */
 class Liip_Shared_Model_Product_Images extends Varien_Object
 {
+    const LABELIZE_MD5 = 1;
+    const LABELIZE_URL = 2;
+
     /** @var array  [ url => ['visibility' => visibility, 'extra' => mixed], .. ] */
     protected $images = array();
 
@@ -20,6 +27,7 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
     public function __construct($product)
     {
         $this->product = $product;
+        $this->setLabelize(self::LABELIZE_MD5);
     }
 
     protected function getMediaGalleryAttributeBackend()
@@ -85,6 +93,17 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
                     $this->saveImage($filename, $info['visibility'], $label);
                 }
             }
+            $existing[$label] = true;
+        }
+
+        if ($this->getDeleteUnknownImages()) {
+            // delete all images that we haven't seen and have a label
+            foreach ($existing as $label=>$img) {
+                if ($img !== true && strlen($label)) { // we didn't see this one
+                    var_dump('remove', $label, $img);
+                    $this->getMediaGalleryAttributeBackend()->removeImage($this->product, $img->getFile());
+                }
+            }
         }
     }
 
@@ -119,7 +138,15 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
 
     protected function labelize($url, $info)
     {
-        return md5($url);
+        switch ($this->getLabelize()) {
+        case self::LABELIZE_MD5:
+            return md5($url);
+
+        case self::LABELIZE_URL:
+        default:
+            return $url;
+        }
+        return $url;
     }
 
 }
