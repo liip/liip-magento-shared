@@ -133,5 +133,34 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return Zend_Locale_Format::toNumber($value, $options);
     }
+
+    /**
+     * Sort a list of Varien_Objects by a given field
+     *
+     * @return  void
+     */
+    public function sort(&$array, $field, $asc = true)
+    {
+        $asc = $asc ? 1 : -1;
+        usort($array, function ($lhs, $rhs) use ($field, $asc) {
+            return $asc * strcmp($lhs->getData($field), $rhs->getData($field));
+        });
+    }
+
+    /**
+     * Sort a list of Varien_Objects by a given field, numerically
+     *
+     * @return  void
+     */
+    public function sortNumeric(&$array, $field, $asc = true)
+    {
+        $asc = $asc ? 1 : -1;
+        usort($array, function ($lhs, $rhs) use ($field, $asc) {
+            if ($lhs->getData($field) == $rhs->getData($field)) {
+                return 0;
+            }
+            return $lhs->getData($field) < $rhs->getData($field) ? -$asc : $asc;
+        });
+    }
 }
 
