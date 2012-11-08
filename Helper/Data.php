@@ -47,7 +47,7 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
      * @param   string  The format type (full, short, long, medium)
      * @return  string  The formatted date
      */
-    public function formatDate($date, $formatType = Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM)
+    public function formatDate($date, $formatType = Mage_Core_Model_Locale::FORMAT_TYPE_MEDIUM, $time = false)
     {
         if (!$date) {
             return $date;
@@ -59,7 +59,7 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
             $date = $matches[1].'.20'.$matches[2];
         }
 
-        return Mage::helper('core')->formatDate($date, $formatType);
+        return Mage::helper('core')->formatDate($date, $formatType, $time);
     }
 
     /**
