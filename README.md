@@ -16,7 +16,7 @@ Installation
 
 Clone the repo
 
-    $ git clone gitosis@git.liip.ch:liip/magento/modules/liip-shared app/code/local/Liip/Shared
+    $ git clone git@github.com:liip/liip-magento-shared.git app/code/local/Liip/Shared
 
 
 Deploy files outside the module directory
