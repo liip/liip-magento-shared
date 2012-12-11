@@ -1,0 +1,22 @@
+{
+    "name": "liip/liip-magento-shared",
+    "type": "magento-module",
+    "license": "MIT",
+    "homepage": "https://github.com/liip/liip-magento-shared",
+    "description": "Shared Magento Extension",
+    "authors":[
+        {
+            "name": "Liip AG",
+            "homepage": "http://www.liip.ch/"
+        }
+    ],
+    "require":{
+        "magento-hackathon/magento-composer-installer": "dev-master"
+    },
+    "extra":{
+        "map": [
+            ["app/etc/modules/Liip_Shared.xml", "app/etc/modules/Liip_Shared.xml"],
+            ["app/code/local/Liip/Shared", "app/code/local/Liip/Shared"]
+        ]
+    }
+}
