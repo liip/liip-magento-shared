@@ -104,9 +104,28 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function fetchGeolocation($place)
     {
-        $url = 'http://maps.google.com/maps/geo?output=xml&q='.urlencode($place);
+        // $url = 'http://maps.google.com/maps/geo?output=xml&q='.urlencode($place).'&key=AIzaSyC1POBL_yklIu2uEczHpLlg31ZcW0Rbsu8&sensor=false';
+        // $xmlStr = Mage::getModel('liip/connection_curl', $url)->get();
+        // return $this->extractGeolocation($xmlStr);
+        $url = 'http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address='.urlencode($place);
         $xmlStr = Mage::getModel('liip/connection_curl', $url)->get();
-        return $this->extractGeolocation($xmlStr);
+        return $this->extractV3Geolocation($xmlStr);
+    }
+
+    /**
+     * @param   string  $xmlStr
+     * @return  array
+     */
+    protected function extractV3Geolocation($xmlStr)
+    {
+        $xml = simplexml_load_string($xmlStr, 'SimpleXMLElement', LIBXML_NOERROR);
+        if ($xml === false || !isset($xml->result->geometry->location)) {
+            return false;
+        }
+
+        $lat = (string)$xml->result->geometry->location->lat;
+        $lng = (string)$xml->result->geometry->location->lng;
+        return array(0 => $lat, 1 => $lng, 'latitude' => $lat, 'longitude' => $lng);
     }
 
     /**
