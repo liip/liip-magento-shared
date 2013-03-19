@@ -11,12 +11,6 @@
         }
     ],
     "require":{
-        "magento-hackathon/magento-composer-installer": "dev-master"
-    },
-    "extra":{
-        "map": [
-            ["app/etc/modules/Liip_Shared.xml", "app/etc/modules/Liip_Shared.xml"],
-            ["app/code/local/Liip/Shared", "app/code/local/Liip/Shared"]
-        ]
+        "magento-hackathon/magento-composer-installer": "*"
     }
 }
