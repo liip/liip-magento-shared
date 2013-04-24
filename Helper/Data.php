@@ -104,10 +104,12 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function fetchGeolocation($place)
     {
-        // $url = 'http://maps.google.com/maps/geo?output=xml&q='.urlencode($place).'&key=AIzaSyC1POBL_yklIu2uEczHpLlg31ZcW0Rbsu8&sensor=false';
-        // $xmlStr = Mage::getModel('liip/connection_curl', $url)->get();
-        // return $this->extractGeolocation($xmlStr);
-        $url = 'http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address='.urlencode($place);
+        $privateKey = '';
+        $url = 'http://maps.googleapis.com/maps/api/geocode/xml?sensor=false';
+        if ($privateKey != '') {
+            $url = $this->signUrl($url . '&client=gme-raiffeisen', $privateKey);
+        }
+        $url.= '&address='.urlencode($place);
         $xmlStr = Mage::getModel('liip/connection_curl', $url)->get();
         return $this->extractV3Geolocation($xmlStr);
     }
@@ -180,6 +182,42 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
             }
             return $lhs->getData($field) < $rhs->getData($field) ? -$asc : $asc;
         });
+    }
+
+    // Google Maps API Signature
+    // Encode a string to URL-safe base64
+    protected function encodeBase64UrlSafe($value)
+    {
+      return str_replace(array('+', '/'), array('-', '_'),
+        base64_encode($value));
+    }
+
+    // Decode a string from URL-safe base64
+    protected function decodeBase64UrlSafe($value)
+    {
+      return base64_decode(str_replace(array('-', '_'), array('+', '/'),
+        $value));
+    }
+
+    // Sign a URL with a given crypto key
+    // Note that this URL must be properly URL-encoded
+    protected function signUrl($myUrlToSign, $privateKey)
+    {
+      // parse the url
+      $url = parse_url($myUrlToSign);
+
+      $urlPartToSign = $url['path'] . "?" . $url['query'];
+
+      // Decode the private key into its binary format
+      $decodedKey = $this->decodeBase64UrlSafe($privateKey);
+
+      // Create a signature using the private key and the URL-encoded
+      // string using HMAC SHA1. This signature will be binary.
+      $signature = hash_hmac("sha1",$urlPartToSign, $decodedKey,  true);
+
+      $encodedSignature = $this->encodeBase64UrlSafe($signature);
+
+      return $myUrlToSign."&signature=".$encodedSignature;
     }
 }
 
