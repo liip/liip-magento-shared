@@ -11,7 +11,7 @@ class Liip_Shared_Helper_Bundle extends Mage_Core_Helper_Abstract
      */
     public function getPrice($product, $bundleOptions, $extra = array())
     {
-        if (!$product instanceof Mage_Catalog_Model_Product) {
+        if (!$product instanceof Mage_Catalog_Model_Product_Type_Price) {
             $product = Mage::getModel('catalog/product')->load($product);
         }
         $options = Mage::helper('daytrips/cart')->getOptions($product);
@@ -19,35 +19,42 @@ class Liip_Shared_Helper_Bundle extends Mage_Core_Helper_Abstract
 
         // if user passed all params
         if (isset($bundleOptions['bundle_option'])) {
-            $bundleOption = $bundleOptions['bundle_option'];
+            $bundleOptions = $bundleOptions['bundle_option'];
         }
 
-        $price = 0;
-        $priceModel = $product->getPriceModel();
+        $total = 0;
 
-        foreach ($bundleOption as $optionId => $selectionIds) {
+        $priceModel = $product->getPriceModel();
+        foreach ($bundleOptions as $optionId => $selectionIds) {
             $selectionIds = (array)$selectionIds;
 
             foreach ($selectionIds as $selectionId) {
                 $selection = $options[$optionId]->getSelectionById($selectionId);
                 if ($selection) {
-                    $price += $this->calculateProductPrice($selection, $extra);
+                    // calculate special cases
+                    $price = $this->calculateProductPrice($selection, $extra);
+
+                    if ($price === false) {
+                        // default
+                        $price = $priceModel->getSelectionPreFinalPrice($product, $selection, $selection->getSelectionQty());
+                    }
+                    $total += $price;
                 } else {
                     return false;
                 }
             }
         }
-        return $price;
+        return $total;
     }
 
-    protected function calculateProductPrice($product, $extra = array())
+    protected function calculateProductPrice($selection, $extra = array())
     {
-        $price = 0;
-        if (Mage::helper('bergbahn')->isBergbahnTicket($product) && $product->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL) {
-            $price = Mage::helper('jungfrau')->getPrice($product->getPricematrix(), $extra['date']);
-        } else {
-            $price = $priceModel->getSelectionPreFinalPrice($product, $selection, $selection->getSelectionQty());
+        $price = false;
+
+        if (Mage::helper('bergbahn')->isBergbahnTicket($selection) && $selection->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_VIRTUAL) {
+            $price = Mage::helper('jungfrau')->getPrice($selection->getPricematrix(), $extra['date']);
         }
+
         return $price;
     }
 }
