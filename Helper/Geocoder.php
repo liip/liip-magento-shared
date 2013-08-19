@@ -5,6 +5,7 @@ class Liip_Shared_Helper_Geocoder extends Mage_Core_Helper_Abstract
     /**
      * Uses the google maps geocoding API
      *
+     * @param   string  $place The location to resolve
      * @return  [lat, lng, 'latitude' => lat, 'longitude' => lng]
      * @see https://developers.google.com/maps/documentation/geocoding/
      */
@@ -23,7 +24,7 @@ class Liip_Shared_Helper_Geocoder extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @param   string  $xmlStr
+     * @param   string  $xmlStr The Google response xml
      * @return  array
      */
     protected function extractV3Geolocation($xmlStr)
@@ -39,38 +40,38 @@ class Liip_Shared_Helper_Geocoder extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * @param   string  $xmlStr
-     * @return  array
-     */
-    protected function extractGeolocation($xmlStr)
-    {
-        $xml = simplexml_load_string($xmlStr, 'SimpleXMLElement', LIBXML_NOERROR);
-        if ($xml === false || !isset($xml->Response->Placemark->Point->coordinates)) {
-            return false;
-        }
-
-        $cords = (string)$xml->Response->Placemark->Point->coordinates[0];
-        $coordinates = explode(',', $cords);
-        return array(0 => $coordinates[1], 1 => $coordinates[0], 'latitude' => $coordinates[1], 'longitude' => $coordinates[0]);
-    }
-
-    // Google Maps API Signature
-    // Encode a string to URL-safe base64
+    * Google Maps API Signature
+    * Encode a string to URL-safe base64
+    *
+    * @param   string  $value THe url to encode
+    * @return  string
+    */
     protected function encodeBase64UrlSafe($value)
     {
       return str_replace(array('+', '/'), array('-', '_'),
         base64_encode($value));
     }
 
-    // Decode a string from URL-safe base64
+    /**
+    * Decode a string from URL-safe base64
+    *
+    * @param   string  $value The url to decode
+    * @return  string
+    */
     protected function decodeBase64UrlSafe($value)
     {
       return base64_decode(str_replace(array('-', '_'), array('+', '/'),
         $value));
     }
 
-    // Sign a URL with a given crypto key
-    // Note that this URL must be properly URL-encoded
+    /**
+    * Sign a URL with a given crypto key
+    * Note that this URL must be properly URL-encoded
+    *
+    * @param   string  $myUrlToSign The url to sign
+    * @param   string  $privateKey The key to sign the url
+    * @return  string
+    */
     protected function signUrl($myUrlToSign, $privateKey)
     {
       // parse the url
