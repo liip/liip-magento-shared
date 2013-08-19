@@ -29,8 +29,6 @@ class Liip_Shared_Helper_Geocoder extends Mage_Core_Helper_Abstract
     protected function extractV3Geolocation($xmlStr)
     {
         $xml = simplexml_load_string($xmlStr, 'SimpleXMLElement', LIBXML_NOERROR);
-        // var_dump($xmlStr);
-        // die();
         if ($xml === false || !isset($xml->result->geometry->location)) {
             return false;
         }
