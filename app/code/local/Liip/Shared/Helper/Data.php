@@ -96,35 +96,6 @@ class Liip_Shared_Helper_Data extends Mage_Core_Helper_Abstract
         return abs($date1 - $date2);
     }
 
-    /**
-     * Uses the google maps geocoding API
-     *
-     * @return  [lat, lng, 'latitude' => lat, 'longitude' => lng]
-     * @see https://developers.google.com/maps/documentation/geocoding/
-     */
-    public function fetchGeolocation($place)
-    {
-        $url = 'http://maps.google.com/maps/geo?output=xml&q='.urlencode($place);
-        $xmlStr = Mage::getModel('liip/connection_curl', $url)->get();
-        return $this->extractGeolocation($xmlStr);
-    }
-
-    /**
-     * @param   string  $xmlStr
-     * @return  array
-     */
-    protected function extractGeolocation($xmlStr)
-    {
-        $xml = simplexml_load_string($xmlStr, 'SimpleXMLElement', LIBXML_NOERROR);
-        if ($xml === false || !isset($xml->Response->Placemark->Point->coordinates)) {
-            return false;
-        }
-
-        $cords = (string)$xml->Response->Placemark->Point->coordinates[0];
-        $coordinates = explode(',', $cords);
-        return array(0 => $coordinates[1], 1 => $coordinates[0], 'latitude' => $coordinates[1], 'longitude' => $coordinates[0]);
-    }
-
     public function formatNumber($value, $precision = null)
     {
         $options = array('locale' => Mage::app()->getLocale()->getLocaleCode());

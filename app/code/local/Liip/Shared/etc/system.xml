@@ -33,6 +33,42 @@
                         </proxy>
                     </fields>
                 </connection>
+                <geocoder translate="label">
+                    <label>Google Maps V3 Geocoder</label>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <key translate="label">
+                            <label>Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>https://developers.google.com/maps/documentation/business/webservices/#cryptographic_signing_key</comment>
+                        </key>
+                        <client translate="label">
+                            <label>Client</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>https://developers.google.com/maps/documentation/business/webservices/#client_id</comment>
+                        </client>
+                        <url translate="label">
+                            <label>URL</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>https://developers.google.com/maps/documentation/geocoding/#GeocodingRequests</comment>
+                        </url>
+                    </fields>
+                </geocoder>
             </groups>
         </liip>
     </sections>
