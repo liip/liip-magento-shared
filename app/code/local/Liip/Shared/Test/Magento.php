@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../../../../Mage.php';
+require_once dirname(__FILE__) . '/../../../../../../../../../app/Mage.php';
 require_once dirname(__FILE__) . '/Abstract.php';
 
 class Liip_Shared_Test_Magento extends Liip_Shared_Test_Abstract
