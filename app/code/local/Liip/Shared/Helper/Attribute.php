@@ -303,4 +303,25 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
         $setup = new Mage_Eav_Model_Entity_Setup('core_setup');
         $setup->addAttributeOption($optionsDel);
     }
+
+    /**
+     * Deletes the given option of the attribute
+     *
+     * @param   string  $code       Attribute code
+     * @param   string|array    $reference      The reference to delete or multiple
+     */
+    public function removeOptions($code, $references)
+    {
+        $optionsDel = array();
+        $options = Mage::helper('liip/attribute')->getOptions($code);
+
+        foreach ($options as $key => $option) {
+            if (in_array($option->getReference(), (array)$references)) {
+                $optionsDel['delete'][$option->option_id] = true;
+                $optionsDel['value'][$option->option_id] = true;
+            }
+        }
+        $setup = new Mage_Eav_Model_Entity_Setup('core_setup');
+        $setup->addAttributeOption($optionsDel);
+    }
 }
