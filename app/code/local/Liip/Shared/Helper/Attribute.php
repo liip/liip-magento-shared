@@ -288,13 +288,10 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
 
     /**
      * Deletes all options of given attribute
-     * Creates or updates an attribute option by reference
-     *
-     * If the reference does not yet exist we insert and otherwise update the option
      *
      * @param   string  $code       Attribute code
      */
-    function removeAllOptions($code)
+    public function removeAllOptions($code)
     {
         $optionsDel = array();
         $options = Mage::helper('liip/attribute')->getOptions($code);
