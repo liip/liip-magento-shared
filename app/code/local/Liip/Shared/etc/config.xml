@@ -114,7 +114,13 @@
             <connection>
                 <proxy></proxy>
             </connection>
+            <geocoder>
+                <key></key>
+                <url>http://maps.googleapis.com/maps/api/geocode/xml</url>
+                <client></client>
+            </geocoder>
         </liip>
+
     </default>
 
 </config>

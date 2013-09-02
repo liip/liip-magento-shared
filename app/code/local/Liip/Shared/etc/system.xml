@@ -41,7 +41,7 @@
                     <show_in_store>0</show_in_store>
                     <fields>
                         <key translate="label">
-                            <label>Key</label>
+                            <label>API Key</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
@@ -50,7 +50,7 @@
                             <comment>https://developers.google.com/maps/documentation/business/webservices/#cryptographic_signing_key</comment>
                         </key>
                         <client translate="label">
-                            <label>Client</label>
+                            <label>Client ID</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
@@ -59,7 +59,7 @@
                             <comment>https://developers.google.com/maps/documentation/business/webservices/#client_id</comment>
                         </client>
                         <url translate="label">
-                            <label>URL</label>
+                            <label>XML API URL</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
