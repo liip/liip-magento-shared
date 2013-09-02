@@ -6,7 +6,7 @@ class Liip_Shared_Helper_Geocoder extends Mage_Core_Helper_Abstract
      * Uses the google maps geocoding API
      *
      * @param   string  $place The location to resolve
-     * @return  [lat, lng, 'latitude' => lat, 'longitude' => lng]
+     * @return  array|bool  [lat, lng, 'latitude' => lat, 'longitude' => lng] or FALSE if something went wrong
      * @see https://developers.google.com/maps/documentation/geocoding/
      */
     public function fetchGeolocation($place)
@@ -14,18 +14,24 @@ class Liip_Shared_Helper_Geocoder extends Mage_Core_Helper_Abstract
         $privateKey = Mage::getStoreConfig("liip/geocoder/key");
         $url = Mage::getStoreConfig("liip/geocoder/url");
         $client = Mage::getStoreConfig("liip/geocoder/client");
-        if ($privateKey != '') {
-            $url = $this->signUrl($url . '&client='. $client . '&address='.urlencode($place), $privateKey);
-        } else {
-            $url.='&address='.urlencode($place);
+
+        if (strpos($url, '?') === false) {
+            $url .= '?';
         }
+        $url .= '&sensor=false&address='.urlencode($place);
+
+        if ($privateKey != '') {
+            $url .= '&client='.urlencode($client);
+            $url = $this->signUrl($url, $privateKey);
+        }
+
         $xmlStr = Mage::getModel('liip/connection_curl', $url)->get();
         return $this->extractV3Geolocation($xmlStr);
     }
 
     /**
      * @param   string  $xmlStr The Google response xml
-     * @return  array
+     * @return  array|bool  The geolocation or FALSE if something went wrong
      */
     protected function extractV3Geolocation($xmlStr)
     {
