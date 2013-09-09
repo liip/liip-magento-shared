@@ -11,6 +11,8 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
 
     protected $proxy;
 
+    protected $statusCode;
+
     public function __construct($args)
     {
         if (is_array($args)) {
@@ -41,6 +43,11 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
     public function getFilename()
     {
         return $this->filename;
+    }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
     }
 
     protected function proxify($curl)
@@ -96,8 +103,10 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         $this->sslify($curl);
         $this->proxify($curl);
     
+        $this->beforeExec($curl);
         $result = curl_exec($curl);
-        $this->logError($curl);
+        $this->afterExec($curl);
+
         curl_close($curl);
     
         return $result;
@@ -125,11 +134,10 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
         curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
 
-        $this->sslify($curl);
-        $this->proxify($curl);
-
+        $this->beforeExec($curl);
         $result = curl_exec($curl);
-        $this->logError($curl);
+        $this->afterExec($curl);
+
         curl_close($curl);
 
         return $result;
@@ -161,6 +169,18 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
         }
 
         return strlen($header);
+    }
+
+    protected function beforeExec($curl)
+    {
+        $this->sslify($curl);
+        $this->proxify($curl);
+    }
+
+    protected function afterExec($curl)
+    {
+        $this->logError($curl);
+        $this->statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     }
 
     /**
@@ -213,11 +233,10 @@ class Liip_Shared_Model_Connection_Curl implements Liip_Shared_Model_Connection
             curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: $contentType"));
         }
 
-        $this->sslify($curl);
-        $this->proxify($curl);
-
+        $this->beforeExec($curl);
         $result = curl_exec($curl);
-        $this->logError($curl);
+        $this->afterExec($curl);
+
         curl_close($curl);
         fclose($fp);
 
