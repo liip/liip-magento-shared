@@ -10,6 +10,8 @@ Features
 * Many methods to handle attributes and their options
 * Full page caching container classes for: disabling caching / cookie-based caching
 * Various helpers
+* Proper URL umlaut replacements (ä: ae)
+* ...
 
 Installation
 ============
