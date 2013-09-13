@@ -40,6 +40,11 @@
             <liip>
                 <class>Liip_Shared_Helper</class>
             </liip>
+            <catalog>
+                <rewrite>
+                    <product_url>Liip_Shared_Helper_Catalog_Product_Url</product_url>
+                </rewrite>
+            </catalog>
         </helpers>
 
         <events>
