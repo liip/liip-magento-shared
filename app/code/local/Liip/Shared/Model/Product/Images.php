@@ -30,6 +30,23 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
         $this->setLabelize(self::LABELIZE_MD5);
     }
 
+    public function getAllMediaGalleryImages($includeDisabled = true)
+    {
+        $images = new Varien_Data_Collection();
+        if ($includeDisabled) {
+            foreach ($this->product->getMediaGallery('images') as $image) {
+                $image['url'] = $this->product->getMediaConfig()->getMediaUrl($image['file']);
+                $image['id'] = isset($image['value_id']) ? $image['value_id'] : null;
+                $image['path'] = $this->product->getMediaConfig()->getMediaPath($image['file']);
+                $images->addItem(new Varien_Object($image));
+            }
+        } else {
+            $images = $this->product->getMediaGalleryImages();
+        }
+
+        return $images;
+    }
+
     protected function getMediaGalleryAttributeBackend()
     {
         if (!$this->mediaGalleryAttributeBackend) {
