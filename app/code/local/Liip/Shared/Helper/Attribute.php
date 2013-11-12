@@ -138,7 +138,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
         $name = $connection->fetchOne($select);
         if ($name === false && $store != Mage_Core_Model_App::ADMIN_STORE_ID) {
             // must be inherited from admin
-            $name = $this->getOptionNameByReference($code, $id, Mage_Core_Model_App::ADMIN_STORE_ID, $entityType);
+            $name = $this->getOptionName($code, $id, Mage_Core_Model_App::ADMIN_STORE_ID, $entityType);
         }
 
         return $name;
