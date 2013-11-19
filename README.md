@@ -13,17 +13,28 @@ Features
 * Proper URL umlaut replacements (ä: ae)
 * ...
 
+
+
 Installation
 ============
 
-Clone the repo
+Add repository to composer.json
 
-    $ git clone git@github.com:liip/liip-magento-shared.git app/code/local/Liip/Shared
+    {
+        "repositories": [
+            {
+                "type": "vcs",
+                "url": "https://github.com/liip/liip-magento-shared.git"
+            }
+        ],
+        "require": {
+            "liip/liip-magento-shared": "*",
+        },
+    }
 
+Install package through composer
 
-Deploy files outside the module directory
-
-    $ cp -R app/code/local/Liip/Shared/install/* .
+    $ ./composer.phar install
 
 
 Usage
