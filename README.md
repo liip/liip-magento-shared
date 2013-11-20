@@ -26,14 +26,10 @@ Add repository to composer.json
             {
               "type": "composer",
               "url": "http://packages.firegento.com"
-            },
-            {
-                "type": "vcs",
-                "url": "https://github.com/liip/liip-magento-shared.git"
             }
         ],
         "require": {
-            "liip/liip-magento-shared": "*",
+            "liip/liip-magento-shared": "1.*",
         },
         "extra":{
             "magento-root-dir": "./"
