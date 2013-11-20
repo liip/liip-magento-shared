@@ -12,5 +12,8 @@
     ],
     "require":{
         "magento-hackathon/magento-composer-installer": "*"
+    },
+    "branch-alias": {
+        "dev-master": "1.0-dev"
     }
 }
