@@ -23,6 +23,10 @@
             <cache_lifetime>86400</cache_lifetime>
         </example_block>
  *
+ * NOTE that cache_lifetime is ignored and should be set by overriding
+ * {@link Enterprise_PageCache_Model_Container_Abstract#_saveCache()}
+ *
+ *
  * 3. Extend this class and implement _getName() returning the placeholder name from above (EXAMPLE_BLOCK)
  */
 abstract class Liip_Shared_Model_PageCache_Container_Abstract_Cookie extends Enterprise_PageCache_Model_Container_Abstract

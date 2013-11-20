@@ -32,13 +32,19 @@ abstract class Liip_Shared_Model_PageCache_Container_Abstract_Refresh extends En
         return false; // never cache
     }
 
+    /**
+     * @return string
+     */
     protected function _getCacheId()
     {
         return $this->_placeholder->getAttribute('name').'_' . md5($this->_placeholder->getAttribute('cache_id'));
     }
 
-    protected function _renderBlock() {
-
+    /**
+     * @return string
+     */
+    protected function _renderBlock()
+    {
         $block = $this->_placeholder->getAttribute('block');
         $template = $this->_placeholder->getAttribute('template');
 

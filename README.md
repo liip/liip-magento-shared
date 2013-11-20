@@ -8,9 +8,10 @@ Features
 * Connection class to download files
 * Adds a `reference` field to attribute options for improved linking of imported values
 * Many methods to handle attributes and their options
-* Full page caching container classes for: disabling caching / cookie-based caching
-* Various helpers
+* Full page caching container classes (EE only) for:
+    disabling / cookie-based / per-customer / per-session
 * Proper URL umlaut replacements (ä: ae)
+* Various helpers
 * ...
 
 

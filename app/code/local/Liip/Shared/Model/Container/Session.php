@@ -1,10 +1,10 @@
 <?php
 
-class Liip_Shared_Model_Container_Session extends Liip_Shared_Model_Container_Abstract_Refresh
+/**
+ * @see Liip_Shared_Model_PageCache_Container_Session
+ * @deprecated
+ */
+class Liip_Shared_Model_Container_Session extends Liip_Shared_Model_PageCache_Container_Session
 {
-    protected function _getName()
-    {
-        return 'LIIP_SESSION';
-    }
 }
 
