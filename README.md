@@ -11,8 +11,8 @@ Features
 * Full page caching container classes (EE only) for:
     disabling / cookie-based / per-customer / per-session
 * Proper URL umlaut replacements (ä: ae)
+* Rounding of price to 0.05 (hardcoded)
 * Various helpers
-* ...
 
 
 
@@ -24,6 +24,10 @@ Add repository to composer.json
     {
         "repositories": [
             {
+              "type": "composer",
+              "url": "http://packages.firegento.com"
+            },
+            {
                 "type": "vcs",
                 "url": "https://github.com/liip/liip-magento-shared.git"
             }
@@ -31,6 +35,9 @@ Add repository to composer.json
         "require": {
             "liip/liip-magento-shared": "*",
         },
+        "extra":{
+            "magento-root-dir": "./"
+        }
     }
 
 Install package through composer
@@ -60,16 +67,3 @@ In your module's `config.xml`, specify the new setup class
         </resources>
     </global>
 
-
-
-Attribute
----------
-
-See `Helper/Attribute.php`
-
-
-
-Connection
-----------
-
-See `Model/Connection*`
