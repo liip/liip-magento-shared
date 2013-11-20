@@ -1,9 +1,9 @@
 <?php
 
-class Liip_Shared_Block_Item extends Mage_Core_Block_Template {
-
-    public function getOptions($name) {
-
+class Liip_Shared_Block_Item extends Mage_Core_Block_Template
+{
+    public function getOptions($name)
+    {
         $item = $this->getItem();
 
         if ($item instanceof Mage_Sales_Model_Quote_Item && $info = $item->getOptionByCode($name)) {
@@ -20,8 +20,8 @@ class Liip_Shared_Block_Item extends Mage_Core_Block_Template {
         return new Varien_Object();
     }
 
-    public function item($item) {
-
+    public function item($item)
+    {
         $this->setItem($item);
 
         return $this->toHtml();

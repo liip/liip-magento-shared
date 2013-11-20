@@ -30,6 +30,9 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
         $this->setLabelize(self::LABELIZE_MD5);
     }
 
+    /**
+     * @return  Varien_Data_Collection
+     */
     public function getAllMediaGalleryImages($includeDisabled = true)
     {
         $images = new Varien_Data_Collection();
@@ -153,6 +156,11 @@ class Liip_Shared_Model_Product_Images extends Varien_Object
         return $existing;
     }
 
+    /**
+     * Creates the image label to use in Magento
+     *
+     * @return string
+     */
     protected function labelize($url, $info)
     {
         switch ($this->getLabelize()) {
