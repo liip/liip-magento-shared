@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../../../../../../Mage.php';
+require_once dirname(__FILE__) . '/../../../../../../../../../../../app/Mage.php';
 
 class Liip_Shared_Test_Model_Core_StoreTest extends PHPUnit_Framework_TestCase
 {
