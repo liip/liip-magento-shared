@@ -42,6 +42,50 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Get all options for an attribute but provides a fallback for value if it was empty
+     *
+     * @param   string  $code   Attribute code
+     * @param   string  $index  Column to index array with (reference, sort_order)
+     * @param   string  $entityType  Entity type
+     * @param   int     $storeId
+     * @param   int     $fallbackStoreId    The store id to use for the value if $storeId's value is empty
+     * @return  array   [index => ['option_id' => id, 'label' => str, 'reference' => ref], 'value' => localized ]
+     */
+    public function getOptionsWithFallback($code, $index = 'reference', $entityType = Mage_Catalog_Model_Product::ENTITY, $storeId = Mage_Core_Model_App::ADMIN_STORE_ID, $fallbackStoreId = Mage_Core_Model_App::ADMIN_STORE_ID)
+    {
+        $attribute = Mage::getModel('eav/entity_attribute');
+        $resource = $attribute->getResource();
+        $connection = $resource->getReadConnection();
+
+        $select = $connection->select()->from(
+            array('o' => $resource->getTable('attribute_option')),
+            array(
+                'option_id', 'sort_order', 'reference',
+                'label' => 'IFNULL(v.value, v_fallback.value) AS label',
+            )
+        );
+        $select->joinLeft(
+            array('v' => $resource->getTable('attribute_option_value')),
+            'v.option_id = o.option_id '.$connection->quoteInto(' AND v.store_id = ?', $storeId),
+            array()
+        );
+        $select->joinLeft(
+            array('v_fallback' => $resource->getTable('attribute_option_value')),
+            'v_fallback.option_id = o.option_id '.$connection->quoteInto('AND v_fallback.store_id = ?', $fallbackStoreId),
+            array()
+        );
+        $select->where('o.attribute_id = ?', $attribute->getIdByCode($entityType, $code));
+        $select->order('o.sort_order');
+
+        $options = array();
+        foreach ($connection->fetchAll($select) as $row) {
+            $options[$row[$index]] = new Varien_Object($row);
+        }
+
+        return $options;
+    }
+
+    /**
      * Get an option id by attribute code and reference.
      *
      * @param   string  $code       Attribute code
