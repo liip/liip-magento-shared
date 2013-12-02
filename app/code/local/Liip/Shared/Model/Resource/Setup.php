@@ -236,5 +236,44 @@ class Liip_Shared_Model_Resource_Setup extends Mage_Catalog_Model_Resource_Setup
 
         return $this;
     }
+
+    /**
+     * Update Sort Order of Attribute on Attribute Set
+     *
+     * @param mixed $entityTypeId
+     * @param mixed $setId
+     * @param mixed $groupId
+     * @param mixed $attributeId
+     * @param int $sortOrder
+     * @return Mage_Eav_Model_Entity_Setup
+     */
+    public function updateAttributeSortOrder($entityTypeId, $setId, $groupId, $attributeId, $sortOrder=null)
+    {
+        $entityTypeId   = $this->getEntityTypeId($entityTypeId);
+        $setId          = $this->getAttributeSetId($entityTypeId, $setId);
+        $groupId        = $this->getAttributeGroupId($entityTypeId, $setId, $groupId);
+        $attributeId    = $this->getAttributeId($entityTypeId, $attributeId);
+        $table          = $this->getTable('eav/entity_attribute');
+
+        $bind = array(
+            'attribute_set_id' => $setId,
+            'attribute_group_id' => $groupId,
+            'attribute_id'     => $attributeId
+        );
+        $select = $this->_conn->select()
+            ->from($table)
+            ->where('attribute_set_id = :attribute_set_id')
+            ->where('attribute_group_id = :attribute_group_id')
+            ->where('attribute_id = :attribute_id');
+        $result = $this->_conn->fetchRow($select, $bind);
+
+        if ($result) {
+            $where = array('entity_attribute_id =?' => $result['entity_attribute_id']);
+            $data  = array('sort_order' => $this->getAttributeSortOrder($entityTypeId, $setId, $groupId, $sortOrder));
+            $this->_conn->update($table, $data, $where);
+        }
+
+        return $this;
+    }
 }
 
