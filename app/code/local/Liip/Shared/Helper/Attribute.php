@@ -118,7 +118,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
      * @param   string  $reference
      * @return  array   Option row with admin label
      */
-    public function getOption($code, $reference)
+    public function getOption($code, $reference, $storeId = Mage_Core_Model_App::ADMIN_STORE_ID)
     {
         $attribute = Mage::getModel('eav/entity_attribute');
         $resource = $attribute->getResource();
@@ -129,7 +129,7 @@ class Liip_Shared_Helper_Attribute extends Mage_Core_Helper_Abstract
         $select->joinLeft(array('v' => $resource->getTable('attribute_option_value')), 'v.option_id = o.option_id', array('label' => 'value'));
         $select->where('o.attribute_id = ?', $id);
         $select->where('o.reference = ?', $reference);
-        $select->where('v.store_id = ?', Mage_Core_Model_App::ADMIN_STORE_ID);
+        $select->where('v.store_id = ?', $storeId);
         return $connection->fetchRow($select);
     }
 
