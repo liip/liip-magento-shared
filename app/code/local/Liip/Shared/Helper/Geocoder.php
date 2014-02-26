@@ -5,11 +5,12 @@ class Liip_Shared_Helper_Geocoder extends Mage_Core_Helper_Abstract
     /**
      * Uses the google maps geocoding API
      *
-     * @param   string  $place The location to resolve
+     * @param   string      $place   The location to resolve
+     * @param   string|null $countryCode The ISO code of the country to search in, e.g. CH for Switzerland
      * @return  array|bool  [lat, lng, 'latitude' => lat, 'longitude' => lng] or FALSE if something went wrong
      * @see https://developers.google.com/maps/documentation/geocoding/
      */
-    public function fetchGeolocation($place)
+    public function fetchGeolocation($place, $countryCode = null)
     {
         $privateKey = Mage::getStoreConfig("liip/geocoder/key");
         $url = Mage::getStoreConfig("liip/geocoder/url");
@@ -23,6 +24,10 @@ class Liip_Shared_Helper_Geocoder extends Mage_Core_Helper_Abstract
         if ($privateKey != '') {
             $url .= '&client='.urlencode($client);
             $url = $this->signUrl($url, $privateKey);
+        }
+
+        if ($countryCode) {
+            $url .= '&component=country:'.$countryCode;
         }
 
         $xmlStr = Mage::getModel('liip/connection_curl', $url)->get();
