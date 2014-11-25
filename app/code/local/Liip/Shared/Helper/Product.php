@@ -63,4 +63,24 @@ class Liip_Shared_Helper_Product extends Mage_Core_Helper_Abstract
         }
         return Mage::getUrl('', array('_direct' => $rewrite->getRequestPath()));
     }
+    
+    /**
+     * @param array $productIds
+     */
+    public function removeCategoryRelations(array $productIds)
+    {
+        /** @var Mage_Core_Model_Resource $resource */
+        $resource = Mage::getSingleton('core/resource');
+        $connection = $resource->getConnection('write');
+
+        $connection->delete(
+            $resource->getTableName('catalog/category_product'),
+            array('product_id IN(?)' => $productIds)
+        );
+
+        /** @var Mage_Index_Model_Indexer $indexer */
+        $indexer = Mage::getSingleton('index/indexer');
+        $categoryProductIndexer = $indexer->getProcessByCode('catalog_category_product');
+        $categoryProductIndexer->changeStatus(Mage_Index_Model_Process::STATUS_REQUIRE_REINDEX);
+    }
 }
