@@ -54,6 +54,15 @@ class Liip_Shared_Helper_Product extends Mage_Core_Helper_Abstract
      */
     public function getUrl($product)
     {
+        // New url rewrites with enterprise 1.13
+        $magentoVersion = Mage::getVersion();
+        if (version_compare($magentoVersion, '1.13', '>=')) {
+            $requestPath = $product->getUrlKey();
+            if ($requestPath) {
+                return Mage::getUrl('', array('_direct' => $requestPath));
+            }
+        }
+
         $rewrite = null;
         if ($categories = $product->getCategoryIds()) {
             $rewrite = Mage::getModel('catalog/url')->getResource()->getRewriteByIdPath('product/' . $product->getId() . '/' . reset($categories), 1);
